@@ -19,5 +19,3 @@ mlruns/
 Notes.md
 Notes.*
 
-# ignore root level training files
-train.py
