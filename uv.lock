@@ -842,6 +842,7 @@ name = "mlflow-local"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "certifi" },
     { name = "mlflow" },
     { name = "scikit-learn" },
 ]
@@ -853,6 +854,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "certifi", specifier = ">=2026.5.20" },
     { name = "mlflow", specifier = ">=3.13.0" },
     { name = "scikit-learn", specifier = ">=1.8.0" },
 ]

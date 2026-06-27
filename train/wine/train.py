@@ -6,7 +6,19 @@ The Wine Quality data set from OpenML includes:
     Imbalanced multi-class target (quality scores 3-8), so accuracy alone is missleading
 """
 
-from pandas.core.common import random_state
+
+# # macOS SSL workaround
+# fetch_openml downloads from api.openml.org over HTTPS. On macOS, python.org Python
+# installs often ship without trusted CA certificates, causing:
+#   URLError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed
+# One-time fix on Mac: /Applications/Python\ 3.14/Install\ Certificates.command
+# We keep this block so the script works out of the box for others who skip that step.
+import ssl
+import certifi
+
+ssl._create_default_https_context = lambda: ssl.create_default_context(
+    cafile=certifi.where()
+)
 
 import mlflow
 import mlflow.sklearn
@@ -24,7 +36,7 @@ RANDOM_STATE = 43
 params = {
     "n_estimators": 200,
     "max_depth": 12,
-    "min_sample_leaf": 2,
+    "min_samples_leaf": 2,
 }
 
 def load_data():
