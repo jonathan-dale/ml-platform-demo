@@ -11,38 +11,46 @@ Each example under `train/` is a self-contained scikit-learn script that logs pa
 ```sh
 git clone https://github.com/jonathan-dale/ml-platform-demo.git
 cd ml-platform-demo
-uv sync
+make install
 ```
 
 **Terminal 1 — start the MLflow tracking server:**
 
 ```sh
-uv run mlflow server \
-  --backend-store-uri sqlite:///mlflow.db \
-  --default-artifact-root ./artifacts \
-  --host 127.0.0.1 \
-  --port 5000
+make start
 ```
 
-Open [http://127.0.0.1:5000](http://127.0.0.1:5000).
+Open [http://127.0.0.1:5000](http://127.0.0.1:5000). Check server status with `make status`; stop it with `make stop`.
 
 **Terminal 2 — run a training example:**
 
 ```sh
-export MLFLOW_TRACKING_URI=http://127.0.0.1:5000
-
-uv run python train/wine/train.py
+make train-wine
 ```
 
 Run it again after changing hyperparameters in the script to compare runs in the MLflow UI. Repeat with different `alpha` values once `train/california/train.py` is wired up to MLflow.
 
 | Example | Status | Command |
 |---------|--------|---------|
-| Wine quality (classification) | Ready | `uv run python train/wine/train.py` |
-| California housing (regression) | In progress | `uv run python train/california/train.py` |
-| Iris (classification) | In progress | `uv run python train/iris/train.py` |
+| Wine quality (classification) | Ready | `make train-wine` |
+| California housing (regression) | In progress | `make train-california` |
+| Iris (classification) | In progress | `make train-iris` |
 
-Without `MLFLOW_TRACKING_URI`, runs are written to `./mlruns/` and can be viewed with `uv run mlflow ui`.
+### Makefile reference
+
+| Command | Description |
+|---------|-------------|
+| `make install` | Install dependencies from `pyproject.toml` / `uv.lock` (`uv sync`) |
+| `make install-dev` | Install dependencies plus dev tools (ruff) |
+| `make start` | Start the MLflow server in the background |
+| `make stop` | Stop the MLflow server |
+| `make status` | Report whether the server is running |
+| `make clean-data` | Delete local MLflow database, artifacts, and logs |
+| `make train-wine` | Run the wine quality example against the local server |
+| `make train-california` | Run the California housing example against the local server |
+| `make train-iris` | Run the iris example against the local server |
+
+Without a running server, runs fall back to local file storage under `./mlruns/` and can be viewed with `uv run mlflow ui`. To reset local tracking state, run `make clean-data`.
 
 ## Project layout
 
@@ -60,6 +68,7 @@ ml-platform-demo/
 ├── monitoring/             # Grafana dashboards (Phase 5, planned)
 ├── .github/                # GitHub Actions (Phase 6, planned)
 ├── docker-compose.yml      # Local stack (Phase 3, planned)
+├── Makefile                # Local MLflow server and training shortcuts
 ├── pyproject.toml
 └── uv.lock
 ```

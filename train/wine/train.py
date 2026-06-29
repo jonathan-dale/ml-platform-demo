@@ -11,7 +11,8 @@ The Wine Quality data set from OpenML includes:
 # fetch_openml downloads from api.openml.org over HTTPS. On macOS, python.org Python
 # installs often ship without trusted CA certificates, causing:
 #   URLError: [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed
-# One-time fix on Mac: /Applications/Python\ 3.14/Install\ Certificates.command
+# One-time fix on Mac: 
+#   /Applications/Python\ 3.14/Install\ Certificates.command
 # We keep this block so the script works out of the box for others who skip that step.
 import ssl
 import certifi
